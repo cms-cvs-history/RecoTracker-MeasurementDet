@@ -1,0 +1,6 @@
+es_module = MeasurementTrackerESProducer
+{
+  string PixelCPE = "PixelCPEfromTrackAngle"
+  string StripCPE = "StripCPEfromTrackAngle"
+  string HitMatcher = "StandardMatcher"
+}

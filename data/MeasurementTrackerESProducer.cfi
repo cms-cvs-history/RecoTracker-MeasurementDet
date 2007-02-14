@@ -1,5 +1,6 @@
-es_module = MeasurementTrackerESProducer
+es_module MeasurementTracker = MeasurementTrackerESProducer
 {
+  string ComponentName = "MeasurementTracker"
   string pixelClusterProducer = "siPixelClusters"
   string stripClusterProducer = "siStripClusters"
   string PixelCPE = "PixelCPEfromTrackAngle"

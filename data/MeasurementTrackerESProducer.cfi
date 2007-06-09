@@ -6,7 +6,8 @@ es_module MeasurementTracker = MeasurementTrackerESProducer
   string PixelCPE             = "PixelCPEfromTrackAngle"
   string StripCPE             = "StripCPEfromTrackAngle"
   string HitMatcher           = "StandardMatcher"
-
+  
   bool   UseStripCablingDB    = false
   bool   UseStripNoiseDB      = false
+  bool   Regional	      = false
 }

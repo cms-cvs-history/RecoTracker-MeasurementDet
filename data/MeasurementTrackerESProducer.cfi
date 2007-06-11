@@ -9,4 +9,5 @@ es_module MeasurementTracker = MeasurementTrackerESProducer
 
   bool   UseStripCablingDB    = false
   bool   UseStripNoiseDB      = false
+  bool   Regional             = false
 }

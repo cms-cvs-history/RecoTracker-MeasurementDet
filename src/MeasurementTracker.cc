@@ -79,6 +79,7 @@ void MeasurementTracker::addPixelDets( const TrackingGeometry::DetContainer& det
        gd != dets.end(); gd++) {
     addPixelDet(*gd, thePixelCPE);
   }  
+
 }
 
 void MeasurementTracker::addStripDets( const TrackingGeometry::DetContainer& dets) const
@@ -158,20 +159,22 @@ void MeasurementTracker::update( const edm::Event& event) const
   updatePixels(event);
   updateStrips(event);
 
-  /*
+  
+  /*  
   for (std::vector<TkStripMeasurementDet*>::const_iterator i=theStripDets.begin();
        i!=theStripDets.end(); i++) {
     if( (*i)->isEmpty()){
-      std::cout << "stripDet id, #hits: "
-               <<  (*i)->geomDet().geographicalId().rawId() << " , "
-               << 0 << std::endl;
+      std::cout << "stripDet id, #hits: " 
+		<<  (*i)->geomDet().geographicalId().rawId() << " , "
+		<< 0 << std::endl;
     }else{
-      std::cout << "stripDet id, #hits: "
-               <<  (*i)->geomDet().geographicalId().rawId() << " , "
-               << (*i)->size() << std::endl;
+      std::cout << "stripDet id, #hits: " 
+		<<  (*i)->geomDet().geographicalId().rawId() << " , "
+		<< (*i)->size() << std::endl;
     }
   }
   */
+  
 }
 
 
@@ -235,14 +238,14 @@ void MeasurementTracker::updateStrips( const edm::Event& event) const
             (**i).setEmpty();
         }
     }else{  
-        //=========  actually load cluster =============
-        if (!isRegional_) {
-            edm::Handle<edm::DetSetVector<SiStripCluster> > clusterHandle;
-            event.getByLabel(stripClusterProducer, clusterHandle);
-            const edm::DetSetVector<SiStripCluster>* clusterCollection = clusterHandle.product();
-
-            for (std::vector<TkStripMeasurementDet*>::const_iterator i=theStripDets.begin();
-                    i!=theStripDets.end(); i++) {
+      //=========  actually load cluster =============
+      if (!isRegional_) {
+	edm::Handle<edm::DetSetVector<SiStripCluster> > clusterHandle;
+	event.getByLabel(stripClusterProducer, clusterHandle);
+	const edm::DetSetVector<SiStripCluster>* clusterCollection = clusterHandle.product();
+	
+	for (std::vector<TkStripMeasurementDet*>::const_iterator i=theStripDets.begin();
+	     i!=theStripDets.end(); i++) {
 
                 // foreach det get cluster range
                 unsigned int id = (**i).geomDet().geographicalId().rawId();
@@ -257,75 +260,91 @@ void MeasurementTracker::updateStrips( const edm::Event& event) const
                 }
             }
         } else { // that is, if (isRegional)
-            //first clear all of them
-            for (std::vector<TkStripMeasurementDet*>::const_iterator i=theStripDets.begin();
-                    i!=theStripDets.end(); i++) {
-                (**i).setEmpty();
-            }
-            //then set the not-empty ones only
-            edm::Handle<edm::SiStripRefGetter<SiStripCluster> > refClusterHandle;
-            event.getByLabel(stripClusterProducer, refClusterHandle);
+	  
+	  //first clear all of them
+	  for (std::vector<TkStripMeasurementDet*>::const_iterator i=theStripDets.begin();
+	       i!=theStripDets.end(); i++) {
+	    (**i).setEmpty();
+	  }
+	  
+	  //then set the not-empty ones only
+	  edm::Handle<edm::SiStripRefGetter<SiStripCluster> > refClusterHandle;
+	  event.getByLabel(stripClusterProducer, refClusterHandle);
+	  
+	  uint32_t tmpId=0;
+	  vector<SiStripCluster>::const_iterator beginIterator;
+	  edm::SiStripRefGetter<SiStripCluster>::const_iterator iregion = refClusterHandle->begin();
+	  int ncluster=0;
+	  for(;iregion!=refClusterHandle->end();++iregion) {
+	    vector<SiStripCluster>::const_iterator icluster = iregion->begin();
+	    tmpId = icluster->geographicalId();
+	    beginIterator = icluster;
+	    
+	    //std::cout << "== tmpId ad inizio loop dentro region: " << tmpId << std::endl;
 
-            uint32_t tmpId=0;
-            vector<SiStripCluster>::const_iterator beginIterator;
-            edm::SiStripRefGetter<SiStripCluster>::const_iterator iregion = refClusterHandle->begin();
-            for(;iregion!=refClusterHandle->end();++iregion) {
-                vector<SiStripCluster>::const_iterator icluster = iregion->begin();
-                tmpId = icluster->geographicalId();
-                beginIterator = icluster;
+	    for (;icluster!=iregion->end();icluster++) {
+	      /* -------- FOR ROB ------------------------
+	      ncluster++;	      
+	      std::cout << "===== cluster id,front, back,size " 
+			<< icluster->geographicalId() << " , "
+			<< icluster->amplitudes().front()  << " , "
+			<< icluster->amplitudes().back()  << " , "
+			<< icluster->amplitudes().size()  << std::endl;
+	      */
+	      if( icluster->geographicalId() != tmpId){ 
+		//std::cout << "geo!=tmpId" << std::endl;
+		//we should find a way to avoid this casting. it is slow
+		//create also another map for TkStripMeasurementDet ??
 
-                //std::cout << "== tmpId ad inizio loop dentro region: " << tmpId << std::endl;
+		// the following castings are really ugly. To be corrected ASAP
+		const TkStripMeasurementDet* theConcreteDet = 
+		  dynamic_cast<const TkStripMeasurementDet*>(idToDet(DetId(tmpId)));
+	    
+		if(theConcreteDet == 0)
+		  throw MeasurementDetException("failed casting to TkStripMeasurementDet*");	    
+		TkStripMeasurementDet*  theConcreteDetUpdatable = 
+		  const_cast<TkStripMeasurementDet*>(theConcreteDet);
+		//std::cout << "=== option1. fill det with id,#clust: " << tmpId  << " , " 
+		//	  << icluster - beginIterator << std::endl;
+		theConcreteDetUpdatable->update(beginIterator,icluster,refClusterHandle,tmpId);
+		//cannot we avoid to update the det with detId of itself??
 
-                for (;icluster!=iregion->end();icluster++) {
-                    //std::cout << "===== cluster id,pos "
-                    //  << icluster->geographicalId() << " , " << icluster->barycenter()
-                    //  << std::endl;
-                    //std::cout << "=====making ref in recHits() " << std::endl;
-                    if( icluster->geographicalId() != tmpId){
-                        //std::cout << "geo!=tmpId" << std::endl;
-                        //we should find a way to avoid this casting. it is slow
-                        //create also another map for TkStripMeasurementDet ??
-
-                        // the following castings are really ugly. To be corrected ASAP
-                        const TkStripMeasurementDet* theConcreteDet =
-                            dynamic_cast<const TkStripMeasurementDet*>(idToDet(DetId(tmpId)));
-
-                        if(theConcreteDet == 0)
-                            throw MeasurementDetException("failed casting to TkStripMeasurementDet*");
-                        TkStripMeasurementDet*  theConcreteDetUpdatable =
-                            const_cast<TkStripMeasurementDet*>(theConcreteDet);
-                        theConcreteDetUpdatable->update(beginIterator,icluster,refClusterHandle,tmpId);
-                        //cannot we avoid to update the det with detId of itself??
-
-                    }
-                }
-                tmpId = icluster->geographicalId();
-                beginIterator = icluster;
-                if( icluster == (iregion->end()-1)){
-                    const TkStripMeasurementDet* theConcreteDet =
-                        dynamic_cast<const TkStripMeasurementDet*>(idToDet(DetId(tmpId)));
-
-                    if(theConcreteDet == 0)
-                        throw MeasurementDetException("failed casting to TkStripMeasurementDet*");
-                    TkStripMeasurementDet*  theConcreteDetUpdatable =
-                        const_cast<TkStripMeasurementDet*>(theConcreteDet);
-                    theConcreteDetUpdatable->update(icluster,iregion->end(),refClusterHandle,tmpId);
-                } else if( icluster == (iregion->end()-1)){
-                    const TkStripMeasurementDet* theConcreteDet =
-                        dynamic_cast<const TkStripMeasurementDet*>(idToDet(DetId(tmpId)));
-
-                    if(theConcreteDet == 0)
-                        throw MeasurementDetException("failed casting to TkStripMeasurementDet*");
-                    TkStripMeasurementDet*  theConcreteDetUpdatable =
-                        const_cast<TkStripMeasurementDet*>(theConcreteDet);
-                    //std::cout << "=== option3. fill det with id,#clust: " << tmpId  << " , "
-                    //      << iregion->end() - beginIterator << std::endl;
-                    theConcreteDetUpdatable->update(beginIterator,iregion->end(),refClusterHandle,tmpId);
-                }//end loop cluster in one ragion
-            }//end of block for updating with regional clusters
-        }
+		tmpId = icluster->geographicalId();
+		beginIterator = icluster;
+		if( icluster == (iregion->end()-1)){
+		  const TkStripMeasurementDet* theConcreteDet = 
+		    dynamic_cast<const TkStripMeasurementDet*>(idToDet(DetId(tmpId)));
+		  
+		  if(theConcreteDet == 0)
+		    throw MeasurementDetException("failed casting to TkStripMeasurementDet*");	    
+		  TkStripMeasurementDet*  theConcreteDetUpdatable = 
+		    const_cast<TkStripMeasurementDet*>(theConcreteDet);
+		  //std::cout << "=== option2. fill det with id,#clust: " << tmpId  << " , " 
+		  //	    << iregion->end() - icluster << std::endl;
+		  theConcreteDetUpdatable->update(icluster,iregion->end(),refClusterHandle,tmpId);
+		}	 
+	      }else if( icluster == (iregion->end()-1)){	   
+		const TkStripMeasurementDet* theConcreteDet = 
+		  dynamic_cast<const TkStripMeasurementDet*>(idToDet(DetId(tmpId)));
+		
+		if(theConcreteDet == 0)
+		  throw MeasurementDetException("failed casting to TkStripMeasurementDet*");	    
+		TkStripMeasurementDet*  theConcreteDetUpdatable = 
+		  const_cast<TkStripMeasurementDet*>(theConcreteDet);
+		//std::cout << "=== option3. fill det with id,#clust: " << tmpId  << " , " 
+		//	  << iregion->end() - beginIterator << std::endl;
+		theConcreteDetUpdatable->update(beginIterator,iregion->end(),refClusterHandle,tmpId);	 
+	      }	  
+	    }//end loop cluster in one ragion
+	  }
+	  //-------- FOR ROB ------------------------
+	  //std::cout << "ncluster: " << ncluster << std::endl;
+	}//end of block for updating with regional clusters 
     }
+    
 }
+
+
 
 
 

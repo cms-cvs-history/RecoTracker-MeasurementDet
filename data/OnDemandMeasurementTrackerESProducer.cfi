@@ -1,0 +1,19 @@
+es_module OnDemandMeasurementTracker = MeasurementTrackerESProducer
+{
+  string ComponentName        = "OnDemandMeasurementTracker"
+  string pixelClusterProducer = "siPixelClusters"
+  string stripClusterProducer = "measurementTrackerSiStripRefGetterProducer"
+  string PixelCPE             = "PixelCPEfromTrackAngle"
+  #string StripCPE             = "StripCPEfromTrackAngle"
+  string StripCPE             = "SimpleStripCPE"
+  # -- use simpleCPE untile the TkGluedMeasurementDet is 
+  #    not corrected to handle properly the track direction
+
+  string HitMatcher           = "StandardMatcher"
+  
+  bool   UseStripCablingDB    = false
+  bool   UseStripNoiseDB      = false
+
+  bool   Regional	      = true
+  bool OnDemand 	      = true
+}

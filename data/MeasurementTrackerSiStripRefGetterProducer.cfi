@@ -1,0 +1,4 @@
+module measurementTrackerSiStripRefGetterProducer = MeasurementTrackerSiStripRefGetterProducer{
+	InputTag InputModuleLabel = SiStripRawToClustersFacility
+	string measurementTrackerName = "MeasurementTrackerOnDemand"
+}

@@ -1,0 +1,28 @@
+# define the default tools for the MeasurementTracker by default
+
+############ initialize magnetic field #########################
+include "MagneticField/Engine/data/volumeBasedMagneticField.cfi"
+
+############### initialize geometry #####################
+include "Geometry/CMSCommonData/data/cmsIdealGeometryXML.cfi"
+include "Geometry/TrackerGeometryBuilder/data/trackerGeometry.cfi"
+include "Geometry/TrackerNumberingBuilder/data/trackerNumberingGeometry.cfi"
+include "RecoTracker/GeometryESProducer/data/TrackerRecoGeometryESProducer.cfi"
+
+############### stripCPE #####################
+include "RecoLocalTracker/SiStripRecHitConverter/data/StripCPE.cfi"
+include "RecoLocalTracker/SiStripRecHitConverter/data/StripCPEfromTrackAngle.cfi"
+include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
+include "CalibTracker/SiStripLorentzAngle/data/SiStripLAFakeESSource.cfi"	
+	
+###################### pixelCPE #####################
+include "RecoLocalTracker/SiPixelRecHits/data/PixelCPEParmError.cfi"
+
+
+####################### region cabling ######################
+include "CondCore/DBCommon/data/CondDBSetup.cfi"
+include "EventFilter/SiStripRawToDigi/data/SiStripFrontierCabling.cfi"
+include "CalibTracker/SiStripConnectivity/data/SiStripConnectivity.cfi"
+include "CalibTracker/SiStripConnectivity/data/SiStripRegionConnectivity.cfi"
+
+include "RecoTracker/MeasurementDet/data/OnDemandMeasurementTrackerESProducer.cfi"

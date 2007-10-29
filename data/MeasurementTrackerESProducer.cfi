@@ -11,7 +11,9 @@ es_module MeasurementTracker = MeasurementTrackerESProducer
 
   string HitMatcher           = "StandardMatcher"
   
-  bool   UseStripCablingDB    = false
+  # bool   UseStripCablingDB    = false # LEGACY
+  bool UseStripModuleQualityDB = false # read Module status from SiStripQuality
+  untracked bool DebugStripModuleQualityDB = false # dump out info om module status
   bool   UseStripNoiseDB      = false
   bool   Regional	      = false
 	bool OnDemand 		= false

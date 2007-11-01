@@ -1,0 +1,23 @@
+    # Track Associators
+    include "SimTracker/TrackAssociation/data/TrackAssociatorByChi2.cfi"
+    include "SimTracker/TrackAssociation/data/TrackAssociatorByHits.cfi"
+
+    # Filters
+    include "Validation/RecoTrack/data/cuts.cff"
+    #replace cutsTPEffic.src = trackingtruthprod
+    #replace cutsTPFake.src = trackingtruthprod
+   
+    # Track Validator    
+    include "Validation/RecoTrack/data/MultiTrackValidator.cff"
+    #replace multiTrackValidator.associators = {"TrackAssociatorByChi2"}
+    replace multiTrackValidator.associators = {"TrackAssociatorByHits"}
+    replace multiTrackValidator.label = {cutsCKF}
+    #replace multiTrackValidator.out = "file.root"
+
+    # Tracking Truth and mixing module, if needed
+    #include "SimGeneral/MixingModule/data/mix_none.cfi"
+    #include "SimGeneral/TrackingAnalysis/data/trackingParticles.cfi"
+
+    ## path pv = {ckftracks,cutsCKF,cutsTPEffic,cutsTPFake,multiTrackValidator}
+    ## ^^ commented out: it is broken in 1_7_0_pre6
+    

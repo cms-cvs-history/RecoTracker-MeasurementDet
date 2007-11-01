@@ -11,10 +11,16 @@ es_module MeasurementTracker = MeasurementTrackerESProducer
 
   string HitMatcher           = "StandardMatcher"
   
-  # bool   UseStripCablingDB    = false # LEGACY
-  bool UseStripModuleQualityDB = false # read Module status from SiStripQuality
-  untracked bool DebugStripModuleQualityDB = false # dump out info om module status
-  bool   UseStripNoiseDB      = false
+  # bool   UseStripCablingDB    = false # NOT LONGER SUPPORTED, see below
+  # bool   UseStripNoiseDB      = false # NOT LONGER SUPPORTED, see below
+
+  bool UseStripModuleQualityDB   = false # read Module status from SiStripQuality
+  bool UseStripAPVFiberQualityDB = false # read APV and Fiber status from SiStripQuality
+  bool UseStripStripQualityDB    = false # read Strip status from SiStripQuality
+  untracked bool DebugStripModuleQualityDB   = false # dump out info om module status
+  untracked bool DebugStripAPVFiberQualityDB = false # dump out info om module status
+  untracked bool DebugStripStripQualityDB    = false # dump out info om module status
+
   bool   Regional	      = false
-	bool OnDemand 		= false
+  bool   OnDemand 	      = false
 }

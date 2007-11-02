@@ -18,6 +18,11 @@
     #include "SimGeneral/MixingModule/data/mix_none.cfi"
     #include "SimGeneral/TrackingAnalysis/data/trackingParticles.cfi"
 
-    ## path pv = {ckftracks,cutsCKF,cutsTPEffic,cutsTPFake,multiTrackValidator}
-    ## ^^ commented out: it is broken in 1_7_0_pre6
+    path pv = {trackerlocalreco,ckftracks,cutsCKF,cutsTPEffic,cutsTPFake,multiTrackValidator}
+
+    module out = PoolOutputModule {
+        untracked string fileName = "tracks.root"
+        untracked vstring outputCommands = { "drop *", "keep recoTracks_*_*_*" }
+    }
+    endpath save = { out }
     

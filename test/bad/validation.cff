@@ -18,7 +18,7 @@
     #include "SimGeneral/MixingModule/data/mix_none.cfi"
     #include "SimGeneral/TrackingAnalysis/data/trackingParticles.cfi"
 
-    path pv = {trackerlocalreco,ckftracks,cutsCKF,cutsTPEffic,cutsTPFake,multiTrackValidator}
+    #path pv = {trackerlocalreco,ckftracks,cutsCKF,cutsTPEffic,cutsTPFake,multiTrackValidator}
 
     module out = PoolOutputModule {
         untracked string fileName = "tracks.root"

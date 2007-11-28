@@ -15,7 +15,7 @@
     #replace multiTrackValidator.out = "file.root"
 
     # Tracking Truth and mixing module, if needed
-    #include "SimGeneral/MixingModule/data/mix_none.cfi"
+    #include "SimGeneral/MixingModule/data/mixNoPU.cfi"
     #include "SimGeneral/TrackingAnalysis/data/trackingParticles.cfi"
 
     #path pv = {trackerlocalreco,ckftracks,cutsCKF,cutsTPEffic,cutsTPFake,multiTrackValidator}

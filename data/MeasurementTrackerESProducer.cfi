@@ -4,8 +4,8 @@ es_module MeasurementTracker = MeasurementTrackerESProducer
   string pixelClusterProducer = "siPixelClusters"
   string stripClusterProducer = "siStripClusters"
   string PixelCPE             = "PixelCPEfromTrackAngle"
-  #string StripCPE             = "StripCPEfromTrackAngle"
-  string StripCPE             = "SimpleStripCPE"
+  string StripCPE             = "StripCPEfromTrackAngle"
+  #string StripCPE             = "SimpleStripCPE"
   # -- use simpleCPE untile the TkGluedMeasurementDet is 
   #    not corrected to handle properly the track direction
 

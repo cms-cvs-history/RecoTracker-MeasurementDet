@@ -22,5 +22,7 @@ es_module MeasurementTracker = MeasurementTrackerESProducer
   untracked bool DebugStripStripQualityDB    = false # dump out info om module status
 
   bool   Regional	      = false
+  #stripLazyGetterProducer label only matters if Regional=true
+  string stripLazyGetterProducer = ""
   bool   OnDemand 	      = false
 }

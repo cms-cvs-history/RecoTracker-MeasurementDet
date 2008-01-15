@@ -15,5 +15,7 @@ es_module OnDemandMeasurementTracker = MeasurementTrackerESProducer
   bool   UseStripNoiseDB      = false
 
   bool   Regional	      = true
-  bool OnDemand 	      = true
+  #stripLazyGetterProducer label only matters if Regional=true
+  string stripLazyGetterProducer = "SiStripRawToClustersFacility"
+  bool   OnDemand 	      = true
 }

@@ -3,9 +3,8 @@ es_module OnDemandMeasurementTracker = MeasurementTrackerESProducer
   string ComponentName        = "OnDemandMeasurementTracker"
   string pixelClusterProducer = "siPixelClusters"
   string stripClusterProducer = "measurementTrackerSiStripRefGetterProducer"
-  string PixelCPE             = "PixelCPEfromTrackAngle"
-  #string StripCPE             = "StripCPEfromTrackAngle"
-  string StripCPE             = "SimpleStripCPE"
+  string PixelCPE             = "PixelCPEGeneric"
+  string StripCPE             = "StripCPEfromTrackAngle"
   # -- use simpleCPE untile the TkGluedMeasurementDet is 
   #    not corrected to handle properly the track direction
 

@@ -17,6 +17,8 @@ es_module MeasurementTracker = MeasurementTrackerESProducer
   bool UseStripModuleQualityDB   = true # read Module status from SiStripQuality
   bool UseStripAPVFiberQualityDB = true # read APV and Fiber status from SiStripQuality
   bool UseStripStripQualityDB    = true # read Strip status from SiStripQuality
+  bool MaskBadAPVFibers          = false # if set to true, clusters entirely on bad APV and Fibers are ignored
+                                         # (UseStripAPVFiberQualityDB must also be 'true' for this to work)
   untracked bool DebugStripModuleQualityDB   = false # dump out info om module status
   untracked bool DebugStripAPVFiberQualityDB = false # dump out info om module status
   untracked bool DebugStripStripQualityDB    = false # dump out info om module status

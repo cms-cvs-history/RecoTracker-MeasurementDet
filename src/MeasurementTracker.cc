@@ -377,6 +377,19 @@ void MeasurementTracker::updatePixels( const edm::Event& event) const
   
 }
 
+void MeasurementTracker::getInactiveStrips(const edm::Event& event,
+					   std::vector<uint32_t> & rawInactiveDetIds) const {
+  if (!theInactiveStripDetectorLabels.empty()) {
+    edm::Handle<DetIdCollection> detIds;
+    for (std::vector<edm::InputTag>::const_iterator itt = theInactiveStripDetectorLabels.begin(), edt = theInactiveStripDetectorLabels.end();
+	 itt != edt; ++itt) {
+      event.getByLabel(*itt, detIds);
+      rawInactiveDetIds.insert(rawInactiveDetIds.end(), detIds->begin(), detIds->end());
+    }
+    if (!rawInactiveDetIds.empty()) std::sort(rawInactiveDetIds.begin(), rawInactiveDetIds.end());
+  }
+}
+
 void MeasurementTracker::updateStrips( const edm::Event& event) const
 {
   // avoid to update twice from the same event
@@ -385,15 +398,7 @@ void MeasurementTracker::updateStrips( const edm::Event& event) const
   typedef edmNew::DetSet<SiStripCluster>   StripDetSet;
 
   std::vector<uint32_t> rawInactiveDetIds;
-  if (!theInactiveStripDetectorLabels.empty()) {
-    edm::Handle<DetIdCollection> detIds;
-    for (std::vector<edm::InputTag>::const_iterator itt = theInactiveStripDetectorLabels.begin(), edt = theInactiveStripDetectorLabels.end(); 
-            itt != edt; ++itt) {
-        event.getByLabel(*itt, detIds);
-        rawInactiveDetIds.insert(rawInactiveDetIds.end(), detIds->begin(), detIds->end());
-    }
-    if (!rawInactiveDetIds.empty()) std::sort(rawInactiveDetIds.begin(), rawInactiveDetIds.end());
-  }
+  getInactiveStrips(event,rawInactiveDetIds);
 
   // Strip Clusters
   std::string stripClusterProducer = pset_.getParameter<std::string>("stripClusterProducer");

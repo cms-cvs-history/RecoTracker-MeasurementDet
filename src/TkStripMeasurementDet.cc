@@ -122,11 +122,10 @@ fastMeasurements( const TrajectoryStateOnSurface& stateOnThisDet,
       SiStripRegionalClusterRef clusterref = edm::makeRefToLazyGetter(regionalHandle_,rightCluster);
       if (clusterref->barycenter() > utraj) break;
     }
-    
-    if ( rightCluster != beginClusterI_) {
-      // there are hits on the left of the utraj
-      uint leftCluster = rightCluster;
-      while ( --leftCluster >=  beginClusterI_) {
+
+    uint leftCluster = 1;
+    for (uint iReadBackWard=1; iReadBackWard<=(rightCluster-beginClusterI_) ; ++iReadBackWard){
+        leftCluster=rightCluster-iReadBackWard;
 	SiStripRegionalClusterRef clusterref = edm::makeRefToLazyGetter(regionalHandle_,leftCluster);
         if (isMasked(*clusterref)) continue;
 	if (accept(clusterref)){
@@ -143,7 +142,6 @@ fastMeasurements( const TrajectoryStateOnSurface& stateOnThisDet,
 	if(!isCompatible) break; // exit loop on first incompatible hit
 	}
 	else LogDebug("TkStripMeasurementDet")<<"skipping this reg str from last iteration on"<<geomDet().geographicalId().rawId()<<" key: "<<clusterref.key();
-      }
     }
     
     for ( ; rightCluster != endClusterI_; ++rightCluster) {

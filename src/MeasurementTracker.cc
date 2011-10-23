@@ -365,6 +365,8 @@ void MeasurementTracker::updatePixels( const edm::Event& event) const
 	  edmNew::DetSetVector<SiPixelClusterRefNew>::const_iterator f=pixelClusterRefs->find(id);
 	  if (f!=pixelClusterRefs->end())
 	    (**i).setClusterToSkip(f->begin(),f->end());
+          else
+             (**i).unset();
 	}
       }else{
 	(**i).setEmpty();
@@ -456,6 +458,8 @@ void MeasurementTracker::updateStrips( const edm::Event& event) const
 	  edmNew::DetSetVector<TkStripMeasurementDet::SiStripClusterRef>::const_iterator f=stripClusterRefs->find(id);
 	  if (f!=stripClusterRefs->end())
 	    (**i).setClusterToSkip(f->begin(),f->end());
+          else
+            (**i).unset();
 	}
       }
     }else{
@@ -510,6 +514,8 @@ void MeasurementTracker::updateStrips( const edm::Event& event) const
 	      edmNew::DetSetVector<TkStripMeasurementDet::SiStripRegionalClusterRef>::const_iterator f=stripClusterRefs->find(tmpId);
 	      if (f!=stripClusterRefs->end())
 		theConcreteDetUpdatable->setRegionalClustersToSkip(f->begin(),f->end());
+              else
+                theConcreteDetUpdatable->unset();
 	    }
 	    //cannot we avoid to update the det with detId of itself??
 
@@ -528,6 +534,8 @@ void MeasurementTracker::updateStrips( const edm::Event& event) const
 		edmNew::DetSetVector<TkStripMeasurementDet::SiStripRegionalClusterRef>::const_iterator f=stripClusterRefs->find(tmpId);
 		if (f!=stripClusterRefs->end())
 		  theConcreteDetUpdatable->setRegionalClustersToSkip(f->begin(),f->end());
+                else
+                  theConcreteDetUpdatable->unset();
 	      }
 	    }   
 	  }else if( icluster == (endIterator-1)){	   
@@ -545,6 +553,8 @@ void MeasurementTracker::updateStrips( const edm::Event& event) const
 	      edmNew::DetSetVector<TkStripMeasurementDet::SiStripRegionalClusterRef>::const_iterator f=stripClusterRefs->find(tmpId);
 	      if (f!=stripClusterRefs->end())
 		theConcreteDetUpdatable->setRegionalClustersToSkip(f->begin(),f->end());
+              else
+                theConcreteDetUpdatable->unset();
 	    }	 
 	  }
 	}//end loop cluster in one ragion

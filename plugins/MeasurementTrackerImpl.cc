@@ -229,7 +229,7 @@ void MeasurementTrackerImpl::addGluedDet( const GluedGeomDet* gd,
     throw MeasurementDetException("MeasurementTracker ERROR: GluedDet components not found as MeasurementDets");
   }
 
-  TkGluedMeasurementDet* det = new TkGluedMeasurementDet( gd, theHitMatcher,
+  TkGluedMeasurementDet* det = new TkGluedMeasurementDet( gd, theHitMatcher,theStripCPE,
 							  monoDet, stereoDet);
   theGluedDets.push_back( det);
   theDetMap[gd->geographicalId()] = det;

@@ -7,6 +7,7 @@
 class GluedGeomDet;
 //class SiStripRecHitMatcher;
 #include "RecoLocalTracker/SiStripRecHitConverter/interface/SiStripRecHitMatcher.h"
+#include "RecoLocalTracker/ClusterParameterEstimator/interface/StripClusterParameterEstimator.h"
 #include "RecoTracker/TransientTrackingRecHit/interface/TSiStripMatchedRecHit.h"
 #include <TrackingTools/PatternTools/interface/MeasurementEstimator.h>
 #include <TrackingTools/PatternTools/interface/TrajectoryMeasurement.h>
@@ -18,7 +19,8 @@ class GluedGeomDet;
 class TkGluedMeasurementDet : public MeasurementDet {
 public:
 
-  TkGluedMeasurementDet( const GluedGeomDet* gdet,const SiStripRecHitMatcher* matcher,
+  TkGluedMeasurementDet( const GluedGeomDet* gdet,
+			 const SiStripRecHitMatcher* matcher,const StripClusterParameterEstimator* cpe,
 			 const MeasurementDet* monoDet,
 			 const MeasurementDet* stereoDet);
 
@@ -45,6 +47,7 @@ public:
 private:
   const GluedGeomDet*         theGeomDet;
   const SiStripRecHitMatcher*       theMatcher;
+  const StripClusterParameterEstimator* theCPE;
   const TkStripMeasurementDet*       theMonoDet;
   const TkStripMeasurementDet*       theStereoDet;
 
@@ -60,10 +63,12 @@ private:
     typedef SiStripRecHitMatcher::Collector Collector;
     HitCollectorForRecHits(const GeomDet * geomDet, 
 			   const SiStripRecHitMatcher * matcher,
+			   const StripClusterParameterEstimator* cpe,
 			   RecHitContainer & target) ;
     void add(SiStripMatchedRecHit2D const& hit) {
       target_.push_back(
-			TSiStripMatchedRecHit::build( geomDet_, std::auto_ptr<TrackingRecHit>(hit.clone()), matcher_)
+			TSiStripMatchedRecHit::build( geomDet_, std::auto_ptr<TrackingRecHit>(hit.clone()), 
+						      matcher_,cpe_)
 			);
       hasNewHits_ = true; 
     }
@@ -75,6 +80,7 @@ private:
   private: 
     const GeomDet              * geomDet_;
     const SiStripRecHitMatcher * matcher_;
+    const StripClusterParameterEstimator* cpe_;
     RecHitContainer       & target_;
     SiStripRecHitMatcher::Collector collector_;       
     bool hasNewHits_;
@@ -88,6 +94,7 @@ private:
     
     HitCollectorForFastMeasurements(const GeomDet * geomDet, 
 				    const SiStripRecHitMatcher * matcher,
+				    const StripClusterParameterEstimator* cpe,
 				    const TrajectoryStateOnSurface& stateOnThisDet,
 				    const MeasurementEstimator& est,
 				    std::vector<TrajectoryMeasurement> & target) ;
@@ -101,6 +108,7 @@ private:
   private: 
     const GeomDet              * geomDet_;
     const SiStripRecHitMatcher * matcher_;
+    const StripClusterParameterEstimator* cpe_;
     const TrajectoryStateOnSurface & stateOnThisDet_;
     const MeasurementEstimator     & est_;
     std::vector<TrajectoryMeasurement> & target_;
